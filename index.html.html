@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技节·科幻小说创作工坊</title>
+    <script src="http://cdn.tailwindcss.com"></script>
+    <link href="http://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0EA5E9',
+                        secondary: '#06B6D4',
+                        accent: '#8B5CF6',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        .ppt-item { transition: all 0.5s ease; }
+        .step-btn.active { background: linear-gradient(135deg, #0EA5E9, #8B5CF6); color: white; }
+        .particle { position: absolute; border-radius: 50%; pointer-events: none; opacity: 0.6; animation: float 15s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .link-text { color: #0EA5E9; text-decoration: underline; word-break: break-all; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 min-h-screen relative">
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- 欢迎页面 -->
+    <div id="welcome-page" class="relative z-10 min-h-screen flex items-center justify-center px-6">
+        <div class="max-w-2xl w-full text-center">
+            <div class="mb-12">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-3xl mb-6">
+                    <i class="fa fa-rocket text-4xl text-white"></i>
+                </div>
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                    科技节科幻小说创作工坊
+                </h1>
+                <p class="text-xl text-slate-600">项目化学习 · 从创意到故事</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div onclick="selectRole('student')" class="bg-white rounded-3xl p-8 cursor-pointer shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-graduation-cap text-3xl text-primary"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-dark mb-3">我是学生</h2>
+                    <p class="text-slate-600 mb-6">开始创作，获取AI灵感催化师的专业指导</p>
+                    <div class="text-primary font-semibold">进入创作 →</div>
+                </div>
+                <div onclick="selectRole('teacher')" class="bg-white rounded-3xl p-8 cursor-pointer shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-book text-3xl text-accent"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-dark mb-3">我是老师</h2>
+                    <p class="text-slate-600 mb-6">查看完整项目化学习任务单与教学设计</p>
+                    <div class="text-accent font-semibold">查看教案 →</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 学生页面 -->
+    <div id="student-page" class="hidden relative z-10">
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-6 py-5">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <button onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
+                            <i class="fa fa-arrow-left text-slate-600"></i>
+                        </button>
+                        <div>
+                            <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                                <i class="fa fa-rocket mr-2"></i>科幻小说创作工坊
+                            </h1>
+                            <p class="text-slate-600 text-sm">学生创作端</p>
+                        </div>
+                    </div>
+                    <!-- 表头AI快速跳转 -->
+                    <a href="https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-5 py-2 rounded-xl font-semibold hover:shadow-lg transition-all">
+                        <i class="fa fa-robot"></i>
+                        <span>AI灵感催化师</span>
+                        <i class="fa fa-external-link text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <main class="max-w-7xl mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold mb-4"><i class="fa fa-bullhorn text-primary mr-2"></i>创作任务</h2>
+                        <p class="text-slate-700 mb-4">为参加学校科技节，请创作一篇原创科幻小说。</p>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-slate-50 rounded-lg p-3"><strong>字数</strong><p>800-1500字</p></div>
+                            <div class="bg-slate-50 rounded-lg p-3"><strong>截止</strong><p>两周后提交</p></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold mb-4"><i class="fa fa-star text-accent mr-2"></i>好科幻三要素</h2>
+                        <div class="space-y-3">
+                            <div class="flex gap-3 p-3"><div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><i class="fa fa-flask text-primary"></i></div><div><h4 class="font-semibold">科学逻辑自洽</h4><p class="text-sm text-slate-600">设定要有内在一致性</p></div></div>
+                            <div class="flex gap-3 p-3"><div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"><i class="fa fa-heart text-accent"></i></div><div><h4 class="font-semibold">文学感染力</h4><p class="text-sm text-slate-600">有意象、有矛盾</p></div></div>
+                            <div class="flex gap-3 p-3"><div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center"><i class="fa fa-lightbulb-o text-secondary"></i></div><div><h4 class="font-semibold">创新与深度</h4><p class="text-sm text-slate-600">引发对现实的思考</p></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl shadow-lg p-6 border-2 border-primary/20">
+                        <h3 class="text-xl font-bold mb-4"><i class="fa fa-lightbulb-o text-primary mr-2"></i>AI灵感催化师 · 使用指南</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-xl p-4">
+                                <h4 class="font-bold text-green-600 mb-3">✅ AI可以帮你</h4>
+                                <ul class="space-y-2 text-sm text-slate-700">
+                                    <li>• 检测科幻设定的逻辑漏洞</li>
+                                    <li>• 为科技设定增加"代价"限制</li>
+                                    <li>• 建议文学意象与象征物</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-xl p-4">
+                                <h4 class="font-bold text-red-500 mb-3">❌ AI不会做</h4>
+                                <ul class="space-y-2 text-sm text-slate-700">
+                                    <li>• 不会替你写完整故事</li>
+                                    <li>• 不包办创意，只提问题</li>
+                                    <li>• 不代替独立思考</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI智能体跳转按钮 -->
+                    <a href="https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q" target="_blank" class="block">
+                        <div class="bg-gradient-to-r from-primary to-accent rounded-2xl shadow-xl p-8 text-center text-white hover:shadow-2xl transition-all hover:-translate-y-1">
+                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-robot text-3xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3">🚀 点击进入 AI灵感催化师</h3>
+                            <p class="text-white/80 text-lg">打开智能体，开始打磨你的科幻创意</p>
+                            <div class="mt-4 inline-flex items-center gap-2 bg-white/20 px-6 py-2 rounded-full">
+                                <span>新窗口打开</span>
+                                <i class="fa fa-external-link"></i>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- 纯文本链接 -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+                        <p class="text-slate-600 mb-2">🔗 如果按钮无法点击，请复制或点击下方链接：</p>
+                        <a href="https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q" target="_blank" class="link-text text-lg font-mono">
+                            https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q
+                        </a>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold mb-4"><i class="fa fa-pencil-square-o text-accent mr-2"></i>我的创意打磨卡</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-xl"><label class="block font-medium mb-2">📝 1. 我的初始设定</label><textarea rows="2" class="w-full px-4 py-3 rounded-lg border border-blue-200 outline-none resize-none" placeholder="写下你最初的科幻想法..."></textarea></div>
+                            <div class="p-4 bg-purple-50 rounded-xl"><label class="block font-medium mb-2">💡 2. 关键建议记录</label><textarea rows="2" class="w-full px-4 py-3 rounded-lg border border-purple-200 outline-none resize-none" placeholder="记录获得的重要启发..."></textarea></div>
+                            <div class="p-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl"><label class="block font-medium mb-2">✨ 3. 打磨后的最终创意</label><textarea rows="3" class="w-full px-4 py-3 rounded-lg border border-primary/30 outline-none resize-none" placeholder="经过完善后的完整创意..."></textarea></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 老师页面 -->
+    <div id="teacher-page" class="hidden relative z-10 min-h-screen">
+        <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-lg">
+            <div class="max-w-full mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <button onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
+                            <i class="fa fa-arrow-left text-slate-600"></i>
+                        </button>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                            <i class="fa fa-chalkboard-teacher mr-2"></i>科幻小说创作 · 课堂互动教学
+                        </h1>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <!-- 表头AI快速跳转 -->
+                        <a href="https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition-all">
+                            <i class="fa fa-robot"></i>
+                            <span>AI智能体</span>
+                            <i class="fa fa-external-link text-sm"></i>
+                        </a>
+                        <div class="flex items-center gap-2 bg-slate-100 rounded-xl px-4 py-2">
+                            <span id="timer-display" class="text-2xl font-mono font-bold min-w-[80px] text-center">05:00</span>
+                            <button onclick="toggleTimer()" id="timer-btn" class="w-8 h-8 rounded-full bg-green-500 text-white"><i class="fa fa-play"></i></button>
+                            <button onclick="resetTimer()" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600"><i class="fa fa-refresh"></i></button>
+                        </div>
+                        <button onclick="showGroupScore()" class="px-4 py-2 bg-purple-500 text-white rounded-xl font-semibold">
+                            <i class="fa fa-star mr-1"></i>小组加分
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="bg-white border-b border-slate-200">
+            <div class="max-w-full mx-auto px-6">
+                <div class="flex gap-1 py-3 overflow-x-auto justify-center">
+                    <button onclick="showStep(1)" class="step-btn active px-5 py-2 rounded-lg font-semibold whitespace-nowrap">1. 课文导入</button>
+                    <button onclick="showStep(2)" class="step-btn px-5 py-2 rounded-lg font-semibold whitespace-nowrap">2. 任务发布</button>
+                    <button onclick="showStep(3)" class="step-btn px-5 py-2 rounded-lg font-semibold whitespace-nowrap">3. 教师演示</button>
+                    <button onclick="showStep(4)" class="step-btn px-5 py-2 rounded-lg font-semibold whitespace-nowrap">4. 小组讨论</button>
+                    <button onclick="showStep(5)" class="step-btn px-5 py-2 rounded-lg font-semibold whitespace-nowrap">5. AI对话实操</button>
+                    <button onclick="showStep(6)" class="step-btn px-5 py-2 rounded-lg font-semibold whitespace-nowrap">6. 分享交流</button>
+                    <button onclick="showStep(7)" class="step-btn px-5 py-2 rounded-lg font-semibold whitespace-nowrap">📋 任务单</button>
+                </div>
+            </div>
+        </div>
+        <main class="max-w-[1200px] mx-auto px-6 py-6" style="aspect-ratio: 16/9;">
+            
+            <!-- 环节1：课文导入 -->
+            <div id="step-1" class="teaching-step">
+                <div class="bg-white rounded-3xl shadow-lg p-8 h-full flex flex-col justify-center" onclick="showNextPpt(this, 1)">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                            <i class="fa fa-book text-3xl text-primary"></i>
+                        </div>
+                        <h2 class="text-4xl font-bold mb-2">课文回顾与导入</h2>
+                        <p class="text-lg text-slate-600">《带上她的眼睛》写作手法分析</p>
+                        <p class="text-sm text-slate-400 mt-2">👆 点击屏幕继续</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-6 mb-6">
+                        <div class="ppt-item hidden opacity-0 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-200" data-page="1" data-order="1">
+                            <div class="text-4xl mb-3 text-center">🔬</div>
+                            <h3 class="text-xl font-bold text-center mb-2">科学设定</h3>
+                            <p class="text-center text-slate-600">地心飞船+传感眼镜<br><strong class="text-primary">有限性制造张力</strong></p>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border-2 border-purple-200" data-page="1" data-order="2">
+                            <div class="text-4xl mb-3 text-center">🌸</div>
+                            <h3 class="text-xl font-bold text-center mb-2">意象设计</h3>
+                            <p class="text-center text-slate-600">月光、花朵、溪水<br><strong class="text-accent">感官细节打动人心</strong></p>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-2xl p-6 border-2 border-cyan-200" data-page="1" data-order="3">
+                            <div class="text-4xl mb-3 text-center">💔</div>
+                            <h3 class="text-xl font-bold text-center mb-2">情感留白</h3>
+                            <p class="text-center text-slate-600">永困地心的结局<br><strong class="text-secondary">不说破更有力量</strong></p>
+                        </div>
+                    </div>
+                    <div class="ppt-item hidden opacity-0 bg-yellow-50 rounded-2xl p-6 border-2 border-yellow-300" data-page="1" data-order="4">
+                        <h3 class="text-2xl font-bold text-yellow-800 text-center">
+                            <i class="fa fa-lightbulb-o mr-2"></i>今天我们也要创作这样的科幻故事！
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环节2：任务发布 -->
+            <div id="step-2" class="teaching-step hidden">
+                <div class="bg-white rounded-3xl shadow-lg p-8 h-full flex flex-col justify-center" onclick="showNextPpt(this, 2)">
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full mb-4">
+                            <i class="fa fa-rocket text-3xl text-white"></i>
+                        </div>
+                        <h2 class="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                            科技节科幻小说创作大赛
+                        </h2>
+                        <p class="text-lg text-slate-600">正式发布创作任务</p>
+                        <p class="text-sm text-slate-400 mt-2">👆 点击屏幕继续</p>
+                    </div>
+                    <div class="grid md:grid-cols-4 gap-4 mb-6">
+                        <div class="ppt-item hidden opacity-0 bg-slate-50 rounded-xl p-5 text-center" data-page="2" data-order="1">
+                            <div class="text-3xl mb-2">📝</div><p class="text-slate-500">字数要求</p><p class="text-2xl font-bold">800-1500字</p>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 bg-slate-50 rounded-xl p-5 text-center" data-page="2" data-order="2">
+                            <div class="text-3xl mb-2">📅</div><p class="text-slate-500">截止时间</p><p class="text-2xl font-bold">两周后</p>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 bg-slate-50 rounded-xl p-5 text-center" data-page="2" data-order="3">
+                            <div class="text-3xl mb-2">🎯</div><p class="text-slate-500">创作主题</p><p class="text-2xl font-bold">不限</p>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 bg-slate-50 rounded-xl p-5 text-center" data-page="2" data-order="4">
+                            <div class="text-3xl mb-2">🏆</div><p class="text-slate-500">专项奖项</p><p class="text-2xl font-bold">三大奖项</p>
+                        </div>
+                    </div>
+                    <div class="ppt-item hidden opacity-0 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl p-6 border-2 border-primary/20" data-page="2" data-order="5">
+                        <h3 class="text-xl font-bold mb-4 text-center">✅ 一篇好的科幻小说三要素</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="text-center"><div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fa fa-flask text-xl text-primary"></i></div><h4 class="font-bold mb-1">科学逻辑自洽</h4><p class="text-sm text-slate-600">设定要有内在一致性</p></div>
+                            <div class="text-center"><div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fa fa-heart text-xl text-accent"></i></div><h4 class="font-bold mb-1">文学感染力</h4><p class="text-sm text-slate-600">有具体意象和矛盾</p></div>
+                            <div class="text-center"><div class="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fa fa-lightbulb-o text-xl text-secondary"></i></div><h4 class="font-bold mb-1">创新与深度</h4><p class="text-sm text-slate-600">引发对现实的思考</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环节3：教师演示 -->
+            <div id="step-3" class="teaching-step hidden">
+                <div class="bg-white rounded-3xl shadow-lg p-8 h-full flex flex-col justify-center" onclick="showNextPpt(this, 3)">
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-bold mb-2"><i class="fa fa-television text-primary mr-3"></i>教师演示：如何与AI对话</h2>
+                        <p class="text-sm text-slate-400">👆 点击屏幕继续</p>
+                    </div>
+                    <div class="max-w-3xl mx-auto space-y-4">
+                        <div class="ppt-item hidden opacity-0 flex gap-4" data-page="3" data-order="1">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">生</div>
+                            <div class="bg-blue-50 rounded-2xl rounded-tl-none p-4 max-w-[80%] border-2 border-blue-200">
+                                <p class="text-lg text-slate-700">人类可以无限复活，死了就原地满血复活。</p>
+                            </div>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 flex gap-4 justify-end" data-page="3" data-order="2">
+                            <div class="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl rounded-tr-none p-4 max-w-[80%] border-2 border-primary/20">
+                                <p class="text-lg text-slate-700">这个点子很有趣！不过，如果复活<strong class="text-primary">没有代价</strong>，死亡就不可怕了，故事还会紧张吗？</p>
+                            </div>
+                            <div class="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">AI</div>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 flex gap-4 justify-end" data-page="3" data-order="3">
+                            <div class="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl rounded-tr-none p-4 max-w-[80%] border-2 border-primary/20">
+                                <p class="text-lg text-slate-700">建议增加限制：<span class="bg-yellow-200 px-2 rounded font-bold">"复活会失去一段重要记忆"</span></p>
+                                <p class="text-lg text-slate-700 mt-2">💡 你觉得你的主角最怕失去什么记忆呢？</p>
+                            </div>
+                            <div class="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">AI</div>
+                        </div>
+                        <div class="ppt-item hidden opacity-0 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-300" data-page="3" data-order="4">
+                            <p class="text-lg text-yellow-800 text-center font-semibold">
+                                <i class="fa fa-exclamation-circle mr-2"></i>AI不会替你写故事，但能指出逻辑漏洞！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环节4：小组讨论 -->
+            <div id="step-4" class="teaching-step hidden">
+                <div class="bg-white rounded-3xl shadow-lg p-8 h-full flex flex-col justify-center">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                            <i class="fa fa-users text-3xl text-green-600"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-2">小组讨论环节</h2>
+                        <p class="text-lg text-slate-600">5分钟头脑风暴时间</p>
+                    </div>
+                    <div class="max-w-2xl mx-auto space-y-4">
+                        <div class="bg-green-50 rounded-xl p-5 border-2 border-green-200">
+                            <h3 class="font-bold text-green-700 mb-3">📋 讨论要求</h3>
+                            <ul class="space-y-2 text-slate-700">
+                                <li>• 每人分享1个自己的科幻创意</li>
+                                <li>• 互相提问："这个设定有什么漏洞？"</li>
+                                <li>• 互相建议："可以增加什么限制？"</li>
+                                <li>• 每组选出1个最佳创意准备分享</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环节5：AI对话实操 -->
+            <div id="step-5" class="teaching-step hidden">
+                <div class="bg-white rounded-3xl shadow-lg p-8 h-full flex flex-col justify-center">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full mb-4">
+                            <i class="fa fa-robot text-3xl text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-2">AI对话实操环节</h2>
+                        <p class="text-lg text-slate-600">现在开始与AI灵感催化师对话</p>
+                    </div>
+                    <a href="https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q" target="_blank" class="block max-w-md mx-auto">
+                        <div class="bg-gradient-to-r from-primary to-accent rounded-2xl p-6 text-center text-white hover:shadow-xl transition-all">
+                            <h3 class="text-xl font-bold mb-2">🚀 点击打开 AI灵感催化师</h3>
+                            <p class="text-white/80">新窗口打开智能体</p>
+                        </div>
+                    </a>
+                    <div class="mt-4 text-center">
+                        <p class="text-slate-500 mb-2">🔗 或直接访问：</p>
+                        <a href="https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q" target="_blank" class="link-text font-mono">
+                            https://www.coze.cn/store/agent/7651161726737858602?bot_id=true&bid=6kbkkk6o40g0q
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环节6：分享交流 -->
+            <div id="step-6" class="teaching-step hidden">
+                <div class="bg-white rounded-3xl shadow-lg p-8 h-full flex flex-col justify-center">
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
+                            <i class="fa fa-microphone text-3xl text-orange-600"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-2">创意分享交流会</h2>
+                        <p class="text-lg text-slate-600">每组派代表分享打磨后的创意</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <div class="bg-blue-50 rounded-2xl p-6 border-2 border-blue-200">
+                            <h3 class="text-xl font-bold text-blue-700 mb-4">🎤 分享要求</h3>
+                            <ul class="space-y-3 text-slate-700">
+                                <li>• 最初的创意是什么？</li>
+                                <li>• 小组提出了什么问题？</li>
+                                <li>• AI给了什么关键建议？</li>
+                                <li>• 打磨后最终的设定是？</li>
+                            </ul>
+                        </div>
+                        <div class="bg-purple-50 rounded-2xl p-6 border-2 border-purple-200">
+                            <h3 class="text-xl font-bold text-purple-700 mb-4">👏 互评标准</h3>
+                            <ul class="space-y-3 text-slate-700">
+                                <li>• 科学设定是否自洽？</li>
+                                <li>• 是否有文学意象？</li>
+                                <li>• 创意是否新颖独特？</li>
+                                <li>• 选出最佳创意小组</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <div class="inline-block bg-yellow-50 rounded-xl px-8 py-4 border-2 border-yellow-300">
+                            <p class="text-lg text-yellow-800 font-semibold">
+                                <i class="fa fa-trophy mr-2"></i>最佳创意小组获得额外加分！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环节7：完整任务单 -->
+            <div id="step-7" class="teaching-step hidden">
+                <div class="bg-white rounded-3xl shadow-lg p-6 h-full overflow-y-auto" style="max-height: 500px;">
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-primary to-accent rounded-full mb-4">
+                            <i class="fa fa-file-text-o text-2xl text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                            科幻小说创作 · 项目化学习任务单
+                        </h2>
+                    </div>
+                    
+                    <div class="space-y-4 text-left">
+                        <div class="bg-slate-50 rounded-xl p-5">
+                            <h3 class="text-lg font-bold text-slate-800 mb-3">📌 一、项目背景</h3>
+                            <p class="text-slate-600">结合课文《带上她的眼睛》，学习科幻小说创作方法，运用AI辅助打磨创意，参加学校科技节科幻小说大赛。</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 rounded-xl p-5">
+                            <h3 class="text-lg font-bold text-blue-800 mb-3">📝 二、创作要求</h3>
+                            <ul class="space-y-2 text-slate-700">
+                                <li><strong>字数：</strong>800-1500字</li>
+                                <li><strong>主题：</strong>不限，鼓励大胆想象</li>
+                                <li><strong>要素：</strong>科学设定+文学意象+人文思考</li>
+                                <li><strong>截止：</strong>两周后提交电子稿</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-xl p-5">
+                            <h3 class="text-lg font-bold text-green-800 mb-3">🔬 三、创作流程（七步法）</h3>
+                            <ol class="space-y-2 text-slate-700 list-decimal list-inside">
+                                <li><strong>课文导入：</strong>分析《带上她的眼睛》写作手法</li>
+                                <li><strong>任务发布：</strong>明确创作要求与评价标准</li>
+                                <li><strong>教师演示：</strong>学习如何与AI有效对话</li>
+                                <li><strong>小组讨论：</strong>5分钟头脑风暴，互相提问题</li>
+                                <li><strong>AI对话：</strong>使用AI灵感催化师打磨创意</li>
+                                <li><strong>分享交流：</strong>每组分享，全班互评</li>
+                                <li><strong>独立创作：</strong>课后完成完整小说</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="bg-purple-50 rounded-xl p-5">
+                            <h3 class="text-lg font-bold text-purple-800 mb-3">🏆 四、评价标准与奖项</h3>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div class="bg-white rounded-lg p-4 text-center">
+                                    <div class="text-3xl mb-2">🔬</div>
+                                    <h4 class="font-bold">最佳创意奖</h4>
+                                    <p class="text-sm text-slate-600">科学设定严谨新颖</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 text-center">
+                                    <div class="text-3xl mb-2">🌸</div>
+                                    <h4 class="font-bold">最佳文学奖</h4>
+                                    <p class="text-sm text-slate-600">意象丰富文笔优美</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 text-center">
+                                    <div class="text-3xl mb-2">💡</div>
+                                    <h4 class="font-bold">最佳深度奖</h4>
+                                    <p class="text-sm text-slate-600">人文思考有深度</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl p-5 border-2 border-primary/20">
+                            <h3 class="text-lg font-bold mb-3">🤖 五、AI使用公约</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="font-semibold text-green-700 mb-2">✅ 可以做：</p>
+                                    <ul class="text-sm text-slate-600 space-y-1">
+                                        <li>• 让AI检测设定漏洞</li>
+                                        <li>• 向AI寻求意象建议</li>
+                                        <li>• 和AI讨论情节逻辑</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-red-600 mb-2">❌ 不可以：</p>
+                                    <ul class="text-sm text-slate-600 space-y-1">
+                                        <li>• 让AI代写完整故事</li>
+                                        <li>• 直接复制AI内容</li>
+                                        <li>• 放弃独立思考</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 小组加分弹窗 -->
+        <div id="score-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+            <div class="bg-white rounded-3xl p-8 max-w-lg mx-4">
+                <h3 class="text-2xl font-bold text-center mb-6">小组加分板</h3>
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <button onclick="addGroupScore(1)" class="p-4 bg-purple-100 rounded-xl text-center">第1组<br><span id="score-1" class="text-2xl font-bold text-purple-600">0</span></button>
+                    <button onclick="addGroupScore(2)" class="p-4 bg-purple-100 rounded-xl text-center">第2组<br><span id="score-2" class="text-2xl font-bold text-purple-600">0</span></button>
+                    <button onclick="addGroupScore(3)" class="p-4 bg-purple-100 rounded-xl text-center">第3组<br><span id="score-3" class="text-2xl font-bold text-purple-600">0</span></button>
+                    <button onclick="addGroupScore(4)" class="p-4 bg-purple-100 rounded-xl text-center">第4组<br><span id="score-4" class="text-2xl font-bold text-purple-600">0</span></button>
+                    <button onclick="addGroupScore(5)" class="p-4 bg-purple-100 rounded-xl text-center">第5组<br><span id="score-5" class="text-2xl font-bold text-purple-600">0</span></button>
+                    <button onclick="addGroupScore(6)" class="p-4 bg-purple-100 rounded-xl text-center">第6组<br><span id="score-6" class="text-2xl font-bold text-purple-600">0</span></button>
+                </div>
+                <button onclick="closeScoreModal()" class="w-full py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面切换
+        function selectRole(role) {
+            document.getElementById('welcome-page').classList.add('hidden');
+            document.getElementById('student-page').classList.add('hidden');
+            document.getElementById('teacher-page').classList.add('hidden');
+            document.getElementById(role + '-page').classList.remove('hidden');
+        }
+        function goBack() {
+            document.getElementById('welcome-page').classList.remove('hidden');
+            document.getElementById('student-page').classList.add('hidden');
+            document.getElementById('teacher-page').classList.add('hidden');
+        }
+
+        // 教学步骤切换
+        function showStep(stepNum) {
+            document.querySelectorAll('.teaching-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('step-' + stepNum).classList.remove('hidden');
+            document.querySelectorAll('.step-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === stepNum - 1);
+            });
+            if ([1, 2, 3].includes(stepNum)) {
+                currentPptStep[stepNum] = 0;
+                document.querySelectorAll('[data-page="' + stepNum + '"]').forEach(el => {
+                    el.classList.add('hidden', 'opacity-0');
+                });
+            }
+        }
+
+        // PPT点击动画
+        const currentPptStep = {1: 0, 2: 0, 3: 0};
+        function showNextPpt(element, pageNum) {
+            currentPptStep[pageNum]++;
+            const item = document.querySelector('[data-page="' + pageNum + '"][data-order="' + currentPptStep[pageNum] + '"]');
+            if (item) {
+                item.classList.remove('hidden');
+                setTimeout(() => item.classList.remove('opacity-0'), 50);
+            }
+        }
+
+        // 计时器
+        let timerInterval = null;
+        let timerSeconds = 300;
+        let timerRunning = false;
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds / 60);
+            const s = timerSeconds % 60;
+            document.getElementById('timer-display').textContent = m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+        }
+        function toggleTimer() {
+            const btn = document.getElementById('timer-btn');
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                btn.innerHTML = '<i class="fa fa-play"></i>';
+                btn.className = 'w-8 h-8 rounded-full bg-green-500 text-white';
+            } else {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) { timerSeconds--; updateTimerDisplay(); }
+                    else { clearInterval(timerInterval); timerRunning = false; }
+                }, 1000);
+                btn.innerHTML = '<i class="fa fa-pause"></i>';
+                btn.className = 'w-8 h-8 rounded-full bg-red-500 text-white';
+            }
+        }
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerSeconds = 300;
+            updateTimerDisplay();
+        }
+
+        // 小组加分
+        const groupScores = [0,0,0,0,0,0];
+        function showGroupScore() {
+            document.getElementById('score-modal').classList.remove('hidden');
+            document.getElementById('score-modal').classList.add('flex');
+        }
+        function closeScoreModal() {
+            document.getElementById('score-modal').classList.add('hidden');
+            document.getElementById('score-modal').classList.remove('flex');
+        }
+        function addGroupScore(n) {
+            groupScores[n-1]++;
+            document.getElementById('score-' + n).textContent = groupScores[n-1];
+        }
+
+        // 粒子背景
+        const particles = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const s = Math.random() * 6 + 2;
+            p.style.cssText = 'width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;background:rgba(14,165,233,0.2);animation-delay:'+Math.random()*5+'s';
+            particles.appendChild(p);
+        }
+
+        showStep(1);
+    </script>
+  
+<script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
+<script>
+  new CozeWebSDK.WebChatClient({
+    config: {
+      bot_id: '7651161726737858602',
+    },
+    componentProps: {
+      title: 'Coze',
+    },
+    auth: {
+      type: 'token',
+      token: 'pat_PgzRyNS6ZisA2fLx06rWIowVNJ0r7d3EuCuaus5rVdWFgxBKh2i1wgDlYgX9xlN1',
+      onRefreshToken: function () {
+        return 'pat_PgzRyNS6ZisA2fLx06rWIowVNJ0r7d3EuCuaus5rVdWFgxBKh2i1wgDlYgX9xlN1'
+      }
+    }
+  });
+</script>
+</body>
+</html>
